@@ -1,9 +1,17 @@
 "use client";
+import { getHorizonsData } from "@/utils/SearchDataAPI";
 import StarWeaveTitle from "./title";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useStarWeaveState } from "./StarWeaveContext";
 
 export default function HomePage() {
   const [objectName, setObjectName] = useState('');
+  const { searchData, dataLoaded } = useStarWeaveState();
+
+  if (!dataLoaded) {
+    return null;
+  }
+
   return (
     <>
       <div className="flex flex-col justify-center items-center h-screen bg-nebulaBG">
