@@ -1,6 +1,5 @@
 import { getHorizonsData } from "@/utils/SearchDataAPI";
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
-import { error } from "console";
 
 export async function GET(request: Request) {
   const stellarObjectResults: stellarObjectResultType[] = [];

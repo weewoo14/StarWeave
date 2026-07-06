@@ -1,6 +1,5 @@
 import { horizonResultType } from "@/types/SearchDataAPI";
 export function getHorizonsData(horizonsResponse: string) {
-  console.log(typeof horizonsResponse);
   if (horizonsResponse === undefined || horizonsResponse === '') return;
 
   const horizonsResponseLines = horizonsResponse.replace(/\r/g, '').split("\n");
