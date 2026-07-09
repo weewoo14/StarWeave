@@ -14,6 +14,11 @@ export function StarWeaveProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     async function getSearchData() {
       const searchDataResponse = await fetch("/api/searchdata");
+
+      if (!searchDataResponse.ok) {
+        throw new Error(`Search API failed: ${searchDataResponse.status}`);
+      }
+
       const searchDataConvert = await searchDataResponse.json();
       setSearchData(searchDataConvert);
     }
