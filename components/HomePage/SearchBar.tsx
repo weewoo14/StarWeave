@@ -14,51 +14,53 @@ const stellarObjectCategory: Record<string, string> = {
 
 export default function HomeSearchBar() {
     const [searchStellarDataResult, setSearchStellarDataResult] = useState<stellarObjectResultType[]>([]);
+    const [objectSearchResult, setObjectSearchResult] = useState('');
     const {searchData} = useStarWeaveState();
     const router = useRouter();
 
     const searchResultClick = useCallback((name: string, location: string) => {
-        const objectName = encodeURIComponent(name.replaceAll(' ', '-'));
-        router.push(`/database/${location}/${objectName}`);
+      const objectName = encodeURIComponent(name.replaceAll(' ', '-'));
+      router.push(`/database/${location}/${objectName}`);
     }, [router]);
 
     const searchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const searchInputText = event.target.value;
-        setSearchStellarDataResult( filterSearchResult(searchData, searchInputText) );
+      const searchInputText = event.target.value;
+      setObjectSearchResult(searchInputText);
+      setSearchStellarDataResult( filterSearchResult(searchData, searchInputText) );
     }
 
     const searchInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            router.push(`/database`);
-        } 
+      if (event.key === 'Enter') {
+        router.push(`/database?query=${objectSearchResult}`);
+      } 
     }
 
     return (
         <>
-            <input 
+          <input 
             className="w-[50vw] h-[5vh] border-2 border-nebulaAccent rounded-[4px] text-white p-2"
             type="text"
             placeholder="Search a celestial object..."
             onChange={searchInputChange}
             onKeyDown={searchInputKeyDown}
-            />
-            <div className={`w-[50vw] ${searchStellarDataResult.length > 0 ? '' : 'collapse'}`}>
+          />
+          <div className={`w-[50vw] ${searchStellarDataResult.length > 0 ? '' : 'collapse'}`}>
             {searchStellarDataResult.map((stellarObject, idx) => {
-                console.log(stellarObjectCategory[stellarObject.location]);
-                return(
+              console.log(stellarObjectCategory[stellarObject.location]);
+              return(
                 <button
-                    key={idx} 
-                    className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
-                    onClick={() => {
-                    searchResultClick(stellarObject.name, stellarObject.location);
-                    }}
-                >
-                    <p className="text-white">{stellarObject.name}</p>
-                    <p className="text-nebulaHighlight">{stellarObjectCategory[stellarObject.location]}</p>
+                  key={idx} 
+                  className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
+                  onClick={() => {
+                  searchResultClick(stellarObject.name, stellarObject.location);
+                  }}
+              >
+                  <p className="text-white">{stellarObject.name}</p>
+                  <p className="text-nebulaHighlight">{stellarObjectCategory[stellarObject.location]}</p>
                 </button>
-                );
+              );
             })}
-            </div>
+          </div>
         </>
     );
 
