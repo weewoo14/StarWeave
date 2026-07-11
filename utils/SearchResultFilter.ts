@@ -1,9 +1,9 @@
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 
-export function filterSearchResult(stellarObjectData: stellarObjectResultType[], matchText: string) {
+export function filterSearchResult(stellarObjectData: stellarObjectResultType[], matchText: string, amount: number) {
     const filteredStellarObjectData: stellarObjectResultType[] = [];
     for (const stellarObject of stellarObjectData) {
-        if (stellarObject.name.toLowerCase().startsWith(matchText.toLowerCase()) && filteredStellarObjectData.length < 10) {
+        if (stellarObject.name.toLowerCase().startsWith(matchText.toLowerCase()) && filteredStellarObjectData.length < amount) {
             filteredStellarObjectData.push({
                 name: stellarObject.name,
                 location: stellarObject.location

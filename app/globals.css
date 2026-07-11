@@ -7,3 +7,7 @@
   --color-nebulaAccent: #3C3489;
   --color-nebulaHighlight: #1D9E75;
 }
+
+.general-text {
+  @apply font-syne text-white
+}

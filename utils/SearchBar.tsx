@@ -1,10 +1,9 @@
 "use client";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
-import StarWeaveTitle from "./Title";
 import {stellarObjectResultType} from "@/types/SearchDataAPI"
 import { useStarWeaveState } from "../components/StarWeaveContext";
 
-import { useState, useCallback, KeyboardEvent, ChangeEvent } from "react";
+import { useState, useEffect, useCallback, useRef, KeyboardEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 
 const stellarObjectCategory: Record<string, string> = {
@@ -13,14 +12,31 @@ const stellarObjectCategory: Record<string, string> = {
 }
 
 type SearchBarProps = {
-  searchDefaultValue: string
+  searchDefaultValue: string,
+  searchAmount: number
 }
 
-export default function SearchBar({searchDefaultValue} : SearchBarProps) {
+export default function SearchBar({searchDefaultValue, searchAmount} : SearchBarProps) {
     const [searchStellarDataResult, setSearchStellarDataResult] = useState<stellarObjectResultType[]>([]);
     const [objectSearchResult, setObjectSearchResult] = useState('');
     const {searchData} = useStarWeaveState();
+    const searchRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+
+    useEffect(() => {
+      const deleteSearchData = (event: MouseEvent) => {
+        console.log("HERE");
+        if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+          setSearchStellarDataResult([]);
+        }
+      }
+
+      document.addEventListener('mousedown', deleteSearchData);
+
+      return () => {
+        document.removeEventListener('mousedown', deleteSearchData);
+      }
+    }, [])
 
     const searchResultClick = useCallback((name: string, location: string) => {
       const objectName = encodeURIComponent(name.replaceAll(' ', '-'));
@@ -30,7 +46,7 @@ export default function SearchBar({searchDefaultValue} : SearchBarProps) {
     const searchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       const searchInputText = event.target.value;
       setObjectSearchResult(searchInputText);
-      setSearchStellarDataResult( filterSearchResult(searchData, searchInputText) );
+      setSearchStellarDataResult( filterSearchResult(searchData, searchInputText, searchAmount) );
     }
 
     const searchInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -40,8 +56,8 @@ export default function SearchBar({searchDefaultValue} : SearchBarProps) {
     }
 
     return (
-        <div className="flex flex-col relative w-full items-center mt-2 mb-2">
-          <input 
+        <div ref={searchRef} className="flex flex-col relative w-full items-center mt-2 mb-2">
+          <input
             className="w-[50%] h-[5vh] border-2 border-nebulaAccent rounded-[4px] text-white p-2"
             type="text"
             placeholder="Search a celestial object..."
@@ -49,9 +65,8 @@ export default function SearchBar({searchDefaultValue} : SearchBarProps) {
             onKeyDown={searchInputKeyDown}
             defaultValue={searchDefaultValue}
           />
-          <div className={`absolute top-full left-[25%] w-[50%] max-h-[35vh] overflow-y-auto ${searchStellarDataResult.length > 0 ? '' : 'collapse'}`}>
+          <div className={`absolute top-full left-[25%] w-[50%] max-h-[35vh] overflow-y-auto ${searchStellarDataResult.length > 0 ? '' : 'hidden'}`}>
             {searchStellarDataResult.map((stellarObject, idx) => {
-              console.log(stellarObjectCategory[stellarObject.location]);
               return(
                 <button
                   key={idx} 

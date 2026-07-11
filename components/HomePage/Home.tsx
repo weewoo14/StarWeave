@@ -14,7 +14,7 @@ export default function HomePage() {
     <>
       <div className="flex flex-col justify-center items-center w-full h-screen bg-nebulaBG">
         <StarWeaveTitle size={7}/>
-        <SearchBar searchDefaultValue=""/>
+        <SearchBar searchDefaultValue="" searchAmount={10}/>
 
       </div>
     </>
