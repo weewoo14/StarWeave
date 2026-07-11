@@ -1,7 +1,7 @@
 "use client";
-import StarWeaveTitle from "../title";
+import StarWeaveTitle from "../../utils/Title";
 import { useStarWeaveState } from "../StarWeaveContext";
-import HomeSearchBar from "./SearchBar";
+import SearchBar from "../../utils/SearchBar";
 
 export default function HomePage() {
   const { dataLoaded } = useStarWeaveState();
@@ -14,7 +14,7 @@ export default function HomePage() {
     <>
       <div className="flex flex-col justify-center items-center w-full h-screen bg-nebulaBG">
         <StarWeaveTitle size={7}/>
-        <HomeSearchBar/>
+        <SearchBar searchDefaultValue=""/>
 
       </div>
     </>
