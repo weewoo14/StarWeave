@@ -2,6 +2,7 @@
 import { filterSearchResult } from "@/utils/SearchResultFilter";
 import {stellarObjectResultType} from "@/types/SearchDataAPI"
 import { useStarWeaveState } from "../components/StarWeaveContext";
+import useGoToIndivdualObject from "./GoToIndividualObject";
 
 import { useState, useEffect, useCallback, useRef, KeyboardEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ export default function SearchBar({searchDefaultValue, searchAmount} : SearchBar
     const [searchStellarDataResult, setSearchStellarDataResult] = useState<stellarObjectResultType[]>([]);
     const [objectSearchResult, setObjectSearchResult] = useState('');
     const {searchData} = useStarWeaveState();
+    const goToObject = useGoToIndivdualObject();
     const searchRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -72,7 +74,7 @@ export default function SearchBar({searchDefaultValue, searchAmount} : SearchBar
                   key={idx} 
                   className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
                   onClick={() => {
-                  searchResultClick(stellarObject.name, stellarObject.location);
+                  goToObject(stellarObject.name, stellarObject.location);
                   }}
               >
                   <p className="text-white">{stellarObject.name}</p>

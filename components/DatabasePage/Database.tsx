@@ -14,7 +14,7 @@ export default function DatabaseHomePage({searchQuery, } : DatabaseHomePageProps
   const databaseSearchResults = filterSearchResult(searchData, searchQuery, 100);
 
   return (
-    <div className="bg-nebulaBG w-full h-screen">
+    <div className="bg-nebulaBG w-full h-auto">
       <div className="flex flex-col items-center">
         <BackButton destination="/"/>
         <StarWeaveTitle size={7} />
@@ -24,7 +24,7 @@ export default function DatabaseHomePage({searchQuery, } : DatabaseHomePageProps
         <SearchBar searchDefaultValue={searchQuery} searchAmount={10}/>
       </div>
 
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {databaseSearchResults.map((DatabaseObject, idx) => {
           return (
             <DatabaseObjectCard key={idx} name={DatabaseObject.name} location={DatabaseObject.location}/>

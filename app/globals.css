@@ -9,5 +9,5 @@
 }
 
 .general-text {
-  @apply font-syne text-white
+  @apply font-syne text-white p-4
 }
