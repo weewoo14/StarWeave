@@ -3,11 +3,11 @@
 @theme {
   --font-syne: var(--font-syne);
 
-  --color-nebulaBG: #26215C;
-  --color-nebulaAccent: #3C3489;
-  --color-nebulaHighlight: #1D9E75;
+  --color-nebulaBG: #26215c;
+  --color-nebulaAccent: #3c3489;
+  --color-nebulaHighlight: #1d9e75;
 }
 
 .general-text {
-  @apply font-syne text-white p-4
+  @apply font-syne text-white p-4;
 }

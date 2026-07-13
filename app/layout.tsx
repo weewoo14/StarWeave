@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Syne } from "next/font/google";
+
 import { StarWeaveProvider } from "@/components/StarWeaveContext";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,8 +18,8 @@ const geistMono = Geist_Mono({
 const syne = Syne({
   variable: "--font-syne",
   weight: "400",
-  subsets: ["latin"]
-})
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "StarWeave",
@@ -35,9 +37,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <StarWeaveProvider>
-          {children}
-        </StarWeaveProvider>
+        <StarWeaveProvider>{children}</StarWeaveProvider>
       </body>
     </html>
   );
