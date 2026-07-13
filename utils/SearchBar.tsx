@@ -68,9 +68,9 @@ export default function SearchBar({searchDefaultValue="", searchAmount} : Search
                   key={idx} 
                   className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
                   onClick={() => {
-                  goToObject(stellarObject.name, stellarObject.location);
+                    goToObject(stellarObject.name, stellarObject.location, objectSearchResult);
                   }}
-              >
+                >
                   <p className="text-white">{stellarObject.name}</p>
                   <p className="text-nebulaHighlight">{stellarObjectCategory[stellarObject.location]}</p>
                 </button>
