@@ -4,7 +4,6 @@ import SearchBar from "@/utils/SearchBar";
 import DatabaseObjectCard from "./DatabaseObjectCard";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
 import { useStarWeaveState } from "../StarWeaveContext";
-import { useRouter } from "next/navigation";
 
 type DatabaseHomePageProps = {
   searchQuery: string
