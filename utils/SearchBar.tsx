@@ -17,7 +17,7 @@ type SearchBarProps = {
   searchAmount: number
 }
 
-export default function SearchBar({searchDefaultValue, searchAmount} : SearchBarProps) {
+export default function SearchBar({searchDefaultValue="", searchAmount} : SearchBarProps) {
     const [searchStellarDataResult, setSearchStellarDataResult] = useState<stellarObjectResultType[]>([]);
     const [objectSearchResult, setObjectSearchResult] = useState('');
     const {searchData} = useStarWeaveState();
@@ -27,7 +27,6 @@ export default function SearchBar({searchDefaultValue, searchAmount} : SearchBar
 
     useEffect(() => {
       const deleteSearchData = (event: MouseEvent) => {
-        console.log("HERE");
         if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
           setSearchStellarDataResult([]);
         }
@@ -39,11 +38,6 @@ export default function SearchBar({searchDefaultValue, searchAmount} : SearchBar
         document.removeEventListener('mousedown', deleteSearchData);
       }
     }, [])
-
-    const searchResultClick = useCallback((name: string, location: string) => {
-      const objectName = encodeURIComponent(name.replaceAll(' ', '-'));
-      router.push(`/database/${location}/${objectName}`);
-    }, [router]);
 
     const searchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       const searchInputText = event.target.value;

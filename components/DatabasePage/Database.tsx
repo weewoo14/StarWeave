@@ -4,6 +4,7 @@ import SearchBar from "@/utils/SearchBar";
 import DatabaseObjectCard from "./DatabaseObjectCard";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
 import { useStarWeaveState } from "../StarWeaveContext";
+import { useRouter } from "next/navigation";
 
 type DatabaseHomePageProps = {
   searchQuery: string
@@ -14,9 +15,9 @@ export default function DatabaseHomePage({searchQuery, } : DatabaseHomePageProps
   const databaseSearchResults = filterSearchResult(searchData, searchQuery, 100);
 
   return (
-    <div className="bg-nebulaBG w-full h-auto">
+    <div className="bg-nebulaBG w-full min-h-screen h-auto">
       <div className="flex flex-col items-center">
-        <BackButton destination="/"/>
+        <BackButton/>
         <StarWeaveTitle size={7} />
         <p className="text-white font-syne text-[1.8vw]">
           Search Query: "{searchQuery}"
