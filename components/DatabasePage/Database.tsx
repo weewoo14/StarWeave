@@ -29,6 +29,7 @@ export default function DatabaseHomePage({ searchQuery }: DatabaseHomePageProps)
           return (
             <DatabaseObjectCard
               key={idx}
+              objectID={DatabaseObject.id}
               name={DatabaseObject.name}
               location={DatabaseObject.location}
               searchQuery={searchQuery}

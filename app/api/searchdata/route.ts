@@ -25,6 +25,7 @@ export async function GET() {
 
   for (const horizonResult of horizonsResults) {
     stellarObjectResults.push({
+      id: horizonResult.id,
       name: horizonResult.name,
       location: "horizons",
     });
@@ -50,6 +51,7 @@ export async function GET() {
 
   for (const exoplanetResult of exoplanetData) {
     stellarObjectResults.push({
+      id: exoplanetResult.hostname,
       name: exoplanetResult.hostname,
       location: "exoplanet",
     });

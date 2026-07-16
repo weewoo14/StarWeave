@@ -12,6 +12,7 @@ export function filterSearchResult(
       filteredStellarObjectData.length < amount
     ) {
       filteredStellarObjectData.push({
+        id: stellarObject.id,
         name: stellarObject.name,
         location: stellarObject.location,
       });

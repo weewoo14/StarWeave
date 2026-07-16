@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, KeyboardEvent, ChangeEvent } from "react";
 
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
+import isIntegerString from "./checkIntegerString";
 
 import { useStarWeaveState } from "../components/StarWeaveContext";
 
@@ -83,18 +84,18 @@ export default function SearchBar({ searchDefaultValue = "", searchAmount }: Sea
         className={`absolute top-full left-[25%] w-[50%] max-h-[35vh] overflow-y-auto ${isSearchOpen ? "" : "hidden"} ${searchStellarDataResult.length > 0 ? "" : "hidden"}`}
       >
         {searchStellarDataResult.map((stellarObject, idx) => {
+          const displayID = isIntegerString(stellarObject.id);
           return (
             <button
               key={idx}
               className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
               onClick={() => {
-                goToObject(stellarObject.name, stellarObject.location, objectSearchResult);
+                goToObject(stellarObject.id, stellarObject.name, stellarObject.location, objectSearchResult);
               }}
             >
-              <p className="text-white">{stellarObject.name}</p>
-              <p className="text-nebulaHighlight">
-                {stellarObjectCategory[stellarObject.location]}
-              </p>
+              <p className="text-white">{stellarObject.name} </p>
+              <p className={`text-white ${displayID ? '' : 'hidden'}`}>{stellarObject.id} </p>
+              <p className="text-nebulaHighlight"> {stellarObjectCategory[stellarObject.location]} </p>
             </button>
           );
         })}

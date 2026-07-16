@@ -4,10 +4,12 @@ export type searchDataContextType = {
 };
 
 export type stellarObjectResultType = {
+  id: string;
   name: string;
   location: string;
 };
 
 export type horizonResultType = {
+  id: string;
   name: string;
 };

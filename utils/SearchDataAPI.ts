@@ -20,6 +20,7 @@ export function getHorizonsData(horizonsResponse: string) {
 
     if (match && findBarycenter) {
       horizonsResults.push({
+        id: match[1],
         name: match[2].trim(),
       });
     }
