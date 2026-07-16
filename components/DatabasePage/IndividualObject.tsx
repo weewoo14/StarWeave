@@ -17,8 +17,8 @@ export default function IndividualObject({ name, location, fromQuery }: Individu
     <div className="flex flex-col items-center min-h-screen bg-nebulaBG">
       <BackButton destination={`/database?query=${fromQuery}`} />
       <StarWeaveTitle size={5} />
-      <p className="general-text">{name}</p>
-      <p className="general-text">{stellarObjectCategory[location]}</p>
+      <p className="general-text text-[1.5vw]">{name}</p>
+      <p className="general-text text-[1vw]">{stellarObjectCategory[location]}</p>
     </div>
   );
 }
