@@ -11,7 +11,7 @@ export async function GET() {
 
   if (!horizonsMBResponse.ok) {
     return Response.json(
-      { error: `Horizon Data returned ${horizonsMBResponse.status}` },
+      { error: `Horizons Data returned ${horizonsMBResponse.status}` },
       { status: 502 }
     );
   }

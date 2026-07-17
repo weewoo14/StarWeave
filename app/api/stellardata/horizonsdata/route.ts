@@ -1,20 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const horizonsName = searchParams.get("objectName");
-  
-  if (!horizonsName) {
+  const horizonsID = searchParams.get("objectID");
+
+  if (!horizonsID) {
     return NextResponse.json({
-      status: 501,
-      error: "Horizons object name was not found."
+      error: 501,
+      status: "Horizons ID does not exist"
     })
   }
 
   const queryParams = new URLSearchParams({
-    foramt: "json",
-    COMMAND: `${horizonsName}`,
+    format: "json",
+    COMMAND: `${horizonsID}`,
     MAKE_EPHEM: "NO",
   })
-  const objectData = await fetch(`https://ssd.jpl.nasa.gov/api/horizons.api?${queryParams.toString()}`);
+
+  const objectResponse = await fetch(`https://ssd.jpl.nasa.gov/api/horizons.api?${queryParams.toString()}`);
+  if (!objectResponse.ok) {
+    return NextResponse.json({
+      error: 502,
+      status: `Horizons returned ${objectResponse.status}`
+    })
+  }
+
+  const objectData = await objectResponse.json();
+
+  return NextResponse.json(objectData);
 }

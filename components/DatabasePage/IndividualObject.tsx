@@ -21,14 +21,30 @@ export default function IndividualObject({ objectID, name, location, fromQuery }
   useEffect(() => {
     async function getStellarData() {
       const searchParams = new URLSearchParams({
-        objectName: name,
+        objectID: objectID,
         location: location,
       })
 
-      const response = await fetch(`/api/stellardata?${searchParams.toString()}`);
-      const data = await response.json();
-      console.log(data);
-      setAllStellarObjectData(data.objectData);
+      let response;
+      let data;
+      switch (location) {
+        case "horizons":
+          response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
+          if (response && response.ok) {
+            data = await response.json();
+            setAllStellarObjectData(data.result);
+          }
+          break;
+        case "exoplanet":
+          response = await fetch(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
+          if (response && response.ok) {
+            data = await response.json();
+            console.log(data);
+          }
+          break;
+        default:
+          break;
+      }
     }
 
     getStellarData();
