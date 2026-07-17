@@ -6,27 +6,26 @@ export async function GET(request: NextRequest) {
 
   if (!exoplanetID) {
     return NextResponse.json({
-      error: 501,
-      status: "The exoplanet ID is empty."
+      error: 502,
+      status: "Exoplanet ID does not exist."
     })
   }
 
-  // Change host name to planet name later
   const queryParams = `
     select hostname, pl_name, pl_orbper, pl_rade, pl_bmasse
-    from ps
-    where hostname = '${exoplanetID}'
+    from pscomppars
+    where pl_name = '${exoplanetID}'
   `
 
   const objectResponse = await fetch(`https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=${encodeURIComponent(queryParams)}&format=json`);
   if (!objectResponse.ok) {
     return NextResponse.json({
       error: 502,
-      status: `Exoplanet Archive data returned ${objectResponse.status}`
+      status: `Exoplanet Archive Database returned ${objectResponse.status}`
     })
   }
 
   const objectData = await objectResponse.json();
-
+  
   return NextResponse.json(objectData);
 }

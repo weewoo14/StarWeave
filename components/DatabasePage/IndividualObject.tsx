@@ -32,6 +32,7 @@ export default function IndividualObject({ objectID, name, location, fromQuery }
           response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
           if (response && response.ok) {
             data = await response.json();
+            console.log(data.result);
             setAllStellarObjectData(data.result);
           }
           break;

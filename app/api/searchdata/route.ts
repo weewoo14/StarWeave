@@ -33,7 +33,7 @@ export async function GET() {
 
   // NASA Exoplanet Archive
   const exoplanetResponse = await fetch(
-    "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname+from+ps&format=json"
+    "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name+from+pscomppars&format=json"
   );
 
   if (!exoplanetResponse.ok) {
@@ -51,8 +51,8 @@ export async function GET() {
 
   for (const exoplanetResult of exoplanetData) {
     stellarObjectResults.push({
-      id: exoplanetResult.hostname,
-      name: exoplanetResult.hostname,
+      id: exoplanetResult.pl_name,
+      name: exoplanetResult.pl_name,
       location: "exoplanet",
     });
   }
