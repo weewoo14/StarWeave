@@ -1,7 +1,7 @@
 "use client";
 
-import useGoToIndividualObject from "@/utils/GoToIndividualObject";
 import isIntegerString from "@/utils/checkIntegerString";
+import useGoToIndividualObject from "@/utils/GoToIndividualObject";
 
 const stellarObjectCategory: Record<string, string> = {
   horizons: "Horizon Major Body",

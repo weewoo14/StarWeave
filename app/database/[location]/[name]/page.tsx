@@ -7,5 +7,5 @@ export default function ObjectDataPage() {
   const params = useParams<{ location: string; name: string }>();
   const idQuery = useSearchParams().get("query") ?? "";
   const fromQuery = useSearchParams().get("from") ?? "";
-  return <IndividualObject objectID={idQuery} name={params.name} location={params.location} fromQuery={fromQuery} />;
+  return <IndividualObject objectID={idQuery} exoplanetName={params.name} location={params.location} fromQuery={fromQuery} />;
 }
