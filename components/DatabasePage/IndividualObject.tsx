@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 
 import BackButton from "@/components/Helper/BackButton";
 import StarWeaveTitle from "@/components/Helper/Title";
-import { ExoplanetDataType } from "@/types/StellarDataAPI";
+import { ExoplanetDataType, HorizonsDataType } from "@/types/StellarDataAPI";
+import { getHorizonsData } from "@/utils/StellarDataAPI";
 
 type IndividualObjectProps = {
   objectID: string;
@@ -18,6 +19,7 @@ const stellarObjectCategory: Record<string, string> = {
 
 export default function IndividualObject({ objectID, exoplanetName, location, fromQuery }: IndividualObjectProps) {
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
+  const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
   useEffect(() => {
     async function getStellarData() {
@@ -31,8 +33,9 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
         case "horizons":
           response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
           if (response && response.ok) {
-            const horizonsData = await response.json();
-            console.log(horizonsData.result);
+            const horizonsResponseData = await response.json();
+            setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
+            setObjectDataLoaded(true);
           }
           break;
         case "exoplanet":
@@ -49,6 +52,10 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
     }
 
     getStellarData();
+
+    return () => {
+      setObjectDataLoaded(false);
+    }
   }, [location, objectID])
 
   if (!objectDataLoaded) {

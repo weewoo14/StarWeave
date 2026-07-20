@@ -35,11 +35,13 @@ type HorizonsMainBodyType = {
 }
 
 export type HorizonsPlanetType = HorizonsMainBodyType & {
+  type: "planet",
   orbitalPeriod: string | null,
   orbitalSpeed: string | null,
 }
 
 export type HorizonsStarType = HorizonsMainBodyType & {
+  type: "star",
   luminosity: string | null,
   photosphericDepth: string | null,
   chromosphericDepth: string | null,
@@ -47,6 +49,7 @@ export type HorizonsStarType = HorizonsMainBodyType & {
 }
 
 export type HorizonsSatelliteType = {
+  type: "satellite",
   name: string | null,
   mass: string| null,
   radius: string | null,
@@ -56,6 +59,9 @@ export type HorizonsSatelliteType = {
   eccentricity: string | null,
 }
 
-export type HorizonsMiscellanousType = {
-  data: string,
+export type HorizonsMiscellaneousType = {
+  type: "miscellaneous"
+  data: string | null,
 }
+
+export type HorizonsDataType = | HorizonsPlanetType | HorizonsStarType | HorizonsSatelliteType | HorizonsMiscellaneousType

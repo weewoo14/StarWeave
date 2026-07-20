@@ -1,4 +1,4 @@
-import { HorizonsPlanetType, HorizonsSatelliteType, HorizonsStarType } from "@/types/StellarDataAPI";
+import { HorizonsMiscellaneousType, HorizonsPlanetType, HorizonsSatelliteType, HorizonsStarType } from "@/types/StellarDataAPI";
 
 function getString(text: string, regexFormula: RegExp) {
   const matchData = text.match(regexFormula);
@@ -22,10 +22,11 @@ const planetTemperatureRegex = /Atmos\.\s*temp.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 const planetOrbitalPeriodRegex = /Sidereal orbit period\s*=\s*([+-]?\d+(?:\.\d+)?)\s*y/;
 const planetOrbitalSpeedRegex = /Mean orbit speed.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 
-export function getHorizonsPlanetData(horizonsData: string) {
+function getHorizonsPlanetData(horizonsData: string) {
 
   /* Creating the Horizons Planet Data object */
   const horizonsPlanetData: HorizonsPlanetType = {
+    type: "planet",
     name: getString(horizonsData, planetNameRegex),
     mass: getMass(horizonsData, planetMassRegex),
     radius: getString(horizonsData, planetRadiusRegex),
@@ -57,10 +58,11 @@ const starPhotosphericDepthRegex = /Photospheric depth.*?=\s*~?([+-]?\d+(?:\.\d+
 const starChromosphericDepthRegex = /Chromospheric depth.*?=\s*~?([+-]?\d+(?:\.\d+)?)/;
 const starSolarConstant = /Solar constant.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 
-export function getHorizonsStarData(horizonsData: string) {
+function getHorizonsStarData(horizonsData: string) {
 
   /* Creating the Horizons Star Data object */
   const horizonsStarData: HorizonsStarType = {
+    type: "star",
     name: getString(horizonsData, starNameRegex),
     mass: getMass(horizonsData, starMassRegex),
     radius: getString(horizonsData, starRadiusRegex),
@@ -88,10 +90,11 @@ const satelliteSemiMajorAxisRegex = /Semi-major axis.*?=\s*([+-]?\d+(?:\.\d+)?)/
 const satelliteOrbitalPeriodRegex = /Orbital period\s*=\s*([+-]?\d+(?:\.\d+)?)/;
 const satelliteEccentricityRegex = /Eccentricity.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 
-export function getHorizonsSatelliteData(horizonsData: string) {
+function getHorizonsSatelliteData(horizonsData: string) {
 
   /* Creating the Horizons Satellite Data object */
   const horizonsSatelliteData: HorizonsSatelliteType = {
+    type: "satellite",
     name: getString(horizonsData, satelliteNameRegex),
     mass: getMass(horizonsData, satelliteMassRegex),
     radius: getString(horizonsData, satelliteRadiusRegex),
@@ -102,4 +105,33 @@ export function getHorizonsSatelliteData(horizonsData: string) {
   }
 
   return horizonsSatelliteData;
+}
+
+function getHorizonsMiscellaneousData(horizonsData: string) {
+
+  /* Creating the Horizons Satellite Data object */
+  const horizonsMiscellaneousData: HorizonsMiscellaneousType = {
+    type: "miscellaneous",
+    data: horizonsData,
+  }
+
+  return horizonsMiscellaneousData;
+}
+
+export function getHorizonsData(id: string, horizonsData: string) {
+  const numericID = Number(id);
+  const lastTwo = numericID % 100;
+
+  if (numericID === 10) {
+    return getHorizonsStarData(horizonsData);
+
+  } else if (numericID >= 199 && numericID <= 999 && numericID % 100 === 99) {
+    return getHorizonsPlanetData(horizonsData);
+
+  } else if (numericID >= 101 && numericID <= 998 && lastTwo >= 1 && lastTwo < 99) {
+    return getHorizonsSatelliteData(horizonsData);
+
+  } else {
+    return getHorizonsMiscellaneousData(horizonsData);
+  }
 }

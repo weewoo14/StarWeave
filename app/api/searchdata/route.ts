@@ -1,5 +1,5 @@
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
-import { getHorizonsData } from "@/utils/SearchDataAPI";
+import { parseHorizonsData } from "@/utils/SearchDataAPI";
 
 export async function GET() {
   const stellarObjectResults: stellarObjectResultType[] = [];
@@ -17,7 +17,7 @@ export async function GET() {
   }
 
   const horizonsMBData = await horizonsMBResponse.json();
-  const horizonsResults = getHorizonsData(horizonsMBData.result);
+  const horizonsResults = parseHorizonsData(horizonsMBData.result);
 
   if (!horizonsResults) {
     return Response.json({ error: "Horizon Data is undefined" }, { status: 401 });

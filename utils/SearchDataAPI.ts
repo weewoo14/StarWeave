@@ -1,5 +1,5 @@
 import { horizonResultType } from "@/types/SearchDataAPI";
-export function getHorizonsData(horizonsResponse: string) {
+export function parseHorizonsData(horizonsResponse: string) {
   if (horizonsResponse === undefined || horizonsResponse === "") return;
 
   const horizonsResponseLines = horizonsResponse.replace(/\r/g, "").split("\n");
