@@ -1,7 +1,7 @@
-import BackButton from "@/utils/BackButton";
-import SearchBar from "@/utils/SearchBar";
+import BackButton from "@/components/Helper/BackButton";
+import SearchBar from "@/components/Helper/SearchBar";
+import StarWeaveTitle from "@/components/Helper/Title";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
-import StarWeaveTitle from "@/utils/Title";
 
 import { useStarWeaveState } from "../StarWeaveContext";
 

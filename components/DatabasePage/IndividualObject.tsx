@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
+import BackButton from "@/components/Helper/BackButton";
+import StarWeaveTitle from "@/components/Helper/Title";
 import { ExoplanetDataType } from "@/types/StellarDataAPI";
-import BackButton from "@/utils/BackButton";
-import StarWeaveTitle from "@/utils/Title";
 
 type IndividualObjectProps = {
   objectID: string;
@@ -17,25 +17,8 @@ const stellarObjectCategory: Record<string, string> = {
 };
 
 export default function IndividualObject({ objectID, exoplanetName, location, fromQuery }: IndividualObjectProps) {
-  const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType>({
-    discoveryMethod: null,
-    discoveryYear: null,
-    planetName: null,
-    planetRadius: null,
-    planetMass: null,
-    planetDensity: null,
-    planetTemperature: null,
-    planetStellarFlux: null,
-    planetOrbitalDistance: null,
-    planetOrbitalPeriod: null,
-    planetOrbitalEccentricity: null,
-    starName: null,
-    starClassification: null,
-    starTemperature: null,
-    starRadius: null,
-    starLuminosity: null,
-    starAge: null,
-  });
+  const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
+  const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
   useEffect(() => {
     async function getStellarData() {
       const searchParams = new URLSearchParams({
@@ -56,8 +39,8 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
           response = await fetch(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
           if (response && response.ok) {
             const exoplanetResponseData = await response.json();
-            console.log(exoplanetResponseData);
             setExoplanetData(exoplanetResponseData)
+            setObjectDataLoaded(true);
           }
           break;
         default:
@@ -66,7 +49,11 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
     }
 
     getStellarData();
-  }, [])
+  }, [location, objectID])
+
+  if (!objectDataLoaded) {
+    return null;
+  }
 
   const objectName = exoplanetName.replaceAll('%20', ' ');
   return (
@@ -76,7 +63,6 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
       <p className="general-text text-[1.5vw]">{objectName}</p>
       <p className="general-text text-[1vw]">{stellarObjectCategory[location]}</p>
       <p className="general-text text-[1vw]"> {objectID} </p>
-      <p className="general-text text-[1vw]"> {exoplanetData.discoveryMethod} </p>
     </div>
   );
 }

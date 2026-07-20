@@ -1,6 +1,7 @@
 "use client";
-import SearchBar from "../../utils/SearchBar";
-import StarWeaveTitle from "../../utils/Title";
+import SearchBar from "@/components/Helper/SearchBar";
+import StarWeaveTitle from "@/components/Helper/Title";
+
 import { useStarWeaveState } from "../StarWeaveContext";
 
 export default function HomePage() {

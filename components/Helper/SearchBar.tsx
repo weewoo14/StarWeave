@@ -2,13 +2,12 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, KeyboardEvent, ChangeEvent } from "react";
 
+import useGoToIndivdualObject from "@/components//Helper/GoToIndividualObject";
+import { useStarWeaveState } from "@/components/StarWeaveContext";
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
+import isIntegerString from "@/utils/checkIntegerString";
 import { filterSearchResult } from "@/utils/SearchResultFilter";
-import isIntegerString from "./checkIntegerString";
 
-import { useStarWeaveState } from "../components/StarWeaveContext";
-
-import useGoToIndivdualObject from "./GoToIndividualObject";
 
 const stellarObjectCategory: Record<string, string> = {
   horizons: "Horizon Major Body",
