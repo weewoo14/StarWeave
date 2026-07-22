@@ -5,6 +5,8 @@ import StarWeaveTitle from "@/components/Helper/Title";
 import { ExoplanetDataType, HorizonsDataType } from "@/types/StellarDataAPI";
 import { getHorizonsData } from "@/utils/StellarDataAPI";
 
+import ExoplanetObjectPage from "./ExoplanetObject";
+
 type IndividualObjectProps = {
   objectID: string;
   exoplanetName: string;
@@ -21,6 +23,7 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
+  
   useEffect(() => {
     async function getStellarData() {
       const searchParams = new URLSearchParams({
@@ -70,6 +73,7 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
       <p className="general-text text-[1.5vw]">{objectName}</p>
       <p className="general-text text-[1vw]">{stellarObjectCategory[location]}</p>
       <p className="general-text text-[1vw]"> {objectID} </p>
+      <ExoplanetObjectPage location={location} exoplanetData={exoplanetData}/>
     </div>
   );
 }
