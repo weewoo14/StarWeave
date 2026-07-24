@@ -6,6 +6,10 @@ import { ExoplanetDataType, HorizonsDataType } from "@/types/StellarDataAPI";
 import { getHorizonsData } from "@/utils/StellarDataAPI";
 
 import ExoplanetObjectPage from "./ExoplanetObject";
+import HorizonMiscellaneousObjectPage from "./HorizonObject/HorizonMiscellaneousObject";
+import HorizonPlanetObjectPage from "./HorizonObject/HorizonPlanetObject";
+import HorizonSatellitetObjectPage from "./HorizonObject/HorizonSatelliteObject";
+import HorizonStarObjectPage from "./HorizonObject/HorizonStarObject";
 
 type IndividualObjectProps = {
   objectID: string;
@@ -23,7 +27,7 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
-  
+
   useEffect(() => {
     async function getStellarData() {
       const searchParams = new URLSearchParams({
@@ -37,6 +41,7 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
           response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
           if (response && response.ok) {
             const horizonsResponseData = await response.json();
+            console.log(horizonsResponseData.result);
             setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
             setObjectDataLoaded(true);
           }
@@ -73,6 +78,11 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
       <p className="general-text text-[1.5vw]">{objectName}</p>
       <p className="general-text text-[1vw]">{stellarObjectCategory[location]}</p>
       <p className="general-text text-[1vw]"> {objectID} </p>
+
+      <HorizonPlanetObjectPage location={location} horizonsData={horizonsData}/>
+      <HorizonStarObjectPage location={location} horizonsData={horizonsData}/>
+      <HorizonSatellitetObjectPage location={location} horizonsData={horizonsData}/>
+      <HorizonMiscellaneousObjectPage location={location} horizonsData={horizonsData}/>
       <ExoplanetObjectPage location={location} exoplanetData={exoplanetData}/>
     </div>
   );

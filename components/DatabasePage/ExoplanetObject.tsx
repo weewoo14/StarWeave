@@ -1,8 +1,17 @@
 import { ExoplanetDataType } from "@/types/StellarDataAPI";
 
 export default function ExoplanetObjectPage({location, exoplanetData}: {location: string, exoplanetData: ExoplanetDataType | null}) {
+
+  if (location !== "exoplanet") {
+    return null;
+  }
+
+  if (!exoplanetData) {
+    return null;
+  }
+
   return (
-    <div className={`${location === "exoplanet" ? "" : "hidden"} ${exoplanetData === null ? "hidden" : ""}`}>
+    <div className={`${exoplanetData === null ? "hidden" : ""}`}>
       <p className="general-text"> Discovery Year: {exoplanetData?.discoveryMethod} </p>
       <p className="general-text"> Discovery Method: {exoplanetData?.discoveryYear} </p>
       

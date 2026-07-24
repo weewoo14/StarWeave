@@ -15,12 +15,12 @@ const planetNameRegex = /Revised:\s+.*?\s{2,}(.+?)\s+\d+\s*$/m;
 const planetMassRegex = /Mass(?:\s*x)?\s*10\^(\d+).*?=\s*~?([+-]?\d+(?:\.\d+)?)/;
 const planetRadiusRegex = /Vol\.\s*Mean\s*Radius.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 const planetDensityRegex = /Density.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetGravityRegex = /Equ\.\s*grav.*?=\s*([+-]?\d+(?:\.\d+)?)/;
+const planetGravityRegex = /(?:Equ\.\s*grav.*?|g_o,\s*m\/s\^2)\s*=+\s*([+-]?\d+(?:\.\d+)?)/;
 const planetEscapeVelocityRegex = /Escape speed.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetRotationPeriodRegex = /Sid\.\s*rot\.\s*period.*?=\s*([^\n]+)/;
-const planetTemperatureRegex = /Atmos\.\s*temp.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetOrbitalPeriodRegex = /Sidereal orbit period\s*=\s*([+-]?\d+(?:\.\d+)?)\s*y/;
-const planetOrbitalSpeedRegex = /Mean orbit speed.*?=\s*([+-]?\d+(?:\.\d+)?)/;
+const planetRotationPeriodRegex = /(?:Sid\.\s*rot\.\s*period.*?|Mean sidereal day,\s*hr)\s*=+\s*([^\n]+)/;
+const planetTemperatureRegex = /(?:Atmos\.\s*temp.*?|Mean surface temp.*?K)\s*=+\s*([+-]?\d+(?:\.\d+)?)/;
+const planetOrbitalPeriodRegex = /Sidereal\s*orb(?:it)?\s*period\s*=+\s*([+-]?\d+(?:\.\d+)?)\s*y/i;
+const planetOrbitalSpeedRegex = /(?:Mean\s+orbit\s+(?:speed|velocity)|Orbital\s+speed).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
 
 function getHorizonsPlanetData(horizonsData: string) {
 
@@ -82,13 +82,13 @@ function getHorizonsStarData(horizonsData: string) {
 
 
 /* Satellite Regular Expression Formulas */
-const satelliteNameRegex = /Revised:\s+.*?\s{2,}(.+?)\s+\d+\s*$/m;
-const satelliteMassRegex = /Mass\s*\(10\^(\d+)\s*kg\s*\)\s*=\s*([+-]?\d+(?:\.\d+)?)/;
-const satelliteRadiusRegex = /(?:Mean\s+)?Radius\s*\(km\)\s*=\s*([^\n]+)/;
-const satelliteDensityRegex = /Density\s*\(g(?:\/|\s)cm(?:\^?-?3)?\)\s*=\s*([+-]?\d+(?:\.\d+)?)/;
-const satelliteSemiMajorAxisRegex = /Semi-major axis.*?=\s*([+-]?\d+(?:\.\d+)?)/;
+const satelliteNameRegex = /^ Revised:\s+.*?\s{2,}(.+?)\s+\d+\s*$/m;;
+const satelliteMassRegex = /Mass\s*\(10\^(\d+)\s*kg\s*\)\s*=\s*~?([+-]?\d+(?:\.\d+)?)/;
+const satelliteRadiusRegex = /(?:Mean\s+)?Radius\s*\(km\)\s*=\s*(.+?)(?=\s{2,}[A-Za-z]|\s*$)/;
+const satelliteDensityRegex = /Density\s*\(g(?:\/|\s)cm(?:\^-?3)?\)\s*=\s*([+-]?\d+(?:\.\d+)?)/;
+const satelliteSemiMajorAxisRegex = /Semi-major axis,\s*a\s*\(km\)\s*=\s*([+-]?\d+(?:\.\d+)?)/;
 const satelliteOrbitalPeriodRegex = /Orbital period\s*=\s*([+-]?\d+(?:\.\d+)?)/;
-const satelliteEccentricityRegex = /Eccentricity.*?=\s*([+-]?\d+(?:\.\d+)?)/;
+const satelliteEccentricityRegex = /Eccentricity,\s*e\s*=\s*([+-]?\d+(?:\.\d+)?)/;
 
 function getHorizonsSatelliteData(horizonsData: string) {
 
