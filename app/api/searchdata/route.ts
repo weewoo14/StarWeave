@@ -1,7 +1,9 @@
+import mongoConnect from "@/database/mongodb";
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 import { parseHorizonsData } from "@/utils/SearchDataAPI";
 
 export async function GET() {
+  await mongoConnect();
   const stellarObjectResults: stellarObjectResultType[] = [];
 
   // NASA Horizons Major Body

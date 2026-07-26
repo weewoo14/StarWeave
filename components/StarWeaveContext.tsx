@@ -14,14 +14,13 @@ export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function getSearchData() {
-      const searchDataResponse = await fetch("/api/searchdata");
-
+      const searchDataResponse = await fetch("/api/mongodb/GET");
       if (!searchDataResponse.ok) {
-        throw new Error(`Search API failed: ${searchDataResponse.status}`);
+        throw new Error("Issue with search data API");
       }
 
-      const searchDataConvert = await searchDataResponse.json();
-      setSearchData(searchDataConvert);
+      const searchDataArray = await searchDataResponse.json();
+      setSearchData(searchDataArray);
     }
 
     getSearchData();
