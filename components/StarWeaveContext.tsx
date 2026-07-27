@@ -13,17 +13,41 @@ export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
   const dataLoaded = searchData.length > 0 ? true : false;
 
   useEffect(() => {
+    
+    // Getting the Search Data
     async function getSearchData() {
-      const searchDataResponse = await fetch("/api/mongodb/GET");
-      if (!searchDataResponse.ok) {
-        throw new Error("Issue with search data API");
+      const getSearchDataResponse = await fetch("/api/mongodb/GET");
+      if (!getSearchDataResponse.ok) {
+        throw new Error("Issue with GEET Search Data API");
       }
 
-      const searchDataArray = await searchDataResponse.json();
-      setSearchData(searchDataArray);
+      const getSearchDataArray = await getSearchDataResponse.json();
+      setSearchData(getSearchDataArray);
     }
-
     getSearchData();
+
+    // Updating the Search Data
+    async function updateSearchData() {
+      const updateSearchDataResponse = await fetch("/api/searchdata");
+      if (!updateSearchDataResponse.ok) {
+        throw new Error("Issue with Update Search Data API");
+      }
+      const updateSearchDataArray = await updateSearchDataResponse.json();
+
+      await fetch("/api/mongodb/POST", {
+        method: "POST",
+        headers: {
+          "Content-Type" : "application/json",
+        },
+        body: JSON.stringify(updateSearchDataArray),
+      });
+
+    }
+    const updateSearchDataID = setInterval(updateSearchData, 86400000);
+
+    return () => {
+      clearInterval(updateSearchDataID);
+    }
   }, []);
 
   return (
