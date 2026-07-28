@@ -1,4 +1,10 @@
+import Stat from "@/components/Helper/ObjectStatDisplay";
 import { HorizonsDataType } from "@/types/StellarDataAPI";
+
+const stellarObjectCategory: Record<string, string> = {
+  horizons: "Horizon Major Body",
+  exoplanet: "Exoplanet",
+};
 
 export default function HorizonStarObjectPage({location, horizonsData}: {location: string, horizonsData: HorizonsDataType | null}) {
 
@@ -11,20 +17,95 @@ export default function HorizonStarObjectPage({location, horizonsData}: {locatio
   }
 
   return (
-    <div className={`${location === "horizons" ? "" : "hidden"} ${horizonsData?.type === "star" ? "" : "hidden"}`}>
-      <p className="general-text"> Name: {horizonsData?.name} </p>
-      <p className="general-text"> Mass: {horizonsData?.mass} </p>
-      <p className="general-text"> Radius: {horizonsData?.radius} </p>
-      <p className="general-text"> Density: {horizonsData?.density} </p>
-      <p className="general-text"> Surface Gravity: {horizonsData?.surfaceGravity} </p>
-      <p className="general-text"> Escape Velocity: {horizonsData?.escapeVelocity} </p>
-      <p className="general-text"> Rotation Period: {horizonsData?.rotationPeriod} </p>
-      <p className="general-text"> Temperature: {horizonsData?.temperature} </p>
+    <div
+      className={`${
+        horizonsData === null ? "hidden" : ""
+      } mx-auto max-w-7xl p-8 text-white`}
+    >
+      {/* Header */}
+      <div className="mb-8 rounded-2xl border border-nebulaObjectCardAccent bg-nebulaObjectCardBG p-8 shadow-xl">
+        <h1 className="text-4xl font-bold tracking-wide">
+          {horizonsData?.name}
+        </h1>
 
-      <p className="general-text"> Luminosity: {horizonsData?.luminosity} </p>
-      <p className="general-text"> Photospheric Depth: {horizonsData?.photosphericDepth} </p>
-      <p className="general-text"> Chromospheric Depth: {horizonsData?.chromosphericDepth} </p>
-      <p className="general-text"> Solar Constant: {horizonsData?.solarConstant} </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+
+          <span className="rounded-full bg-nebulaAccent px-4 py-1 text-sm font-medium">
+            {stellarObjectCategory[location]}
+          </span>
+          
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Star Summary */}
+        <section className="rounded-2xl border border-nebulaObjectCardAccent bg-nebulaObjectCardBG p-6 shadow-lg">
+          <h2 className="mb-5 text-xl font-semibold text-yellow-400">
+            Star Summary
+          </h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Stat
+              label="Name"
+              value={horizonsData?.name}
+            />
+            <Stat
+              label="Mass"
+              value={horizonsData?.mass}
+            />
+            <Stat
+              label="Radius"
+              value={horizonsData?.radius}
+            />
+            <Stat
+              label="Escape Velocity"
+              value={horizonsData?.escapeVelocity}
+            />
+            <Stat
+              label="Surface Gravity"
+              value={horizonsData?.surfaceGravity}
+            />
+            <Stat
+              label="Rotation Period"
+              value={horizonsData?.rotationPeriod}
+            />
+          </div>
+        </section>
+
+        {/* Star Characteristics */}
+        <section className="rounded-2xl border border-nebulaObjectCardAccent bg-nebulaObjectCardBG p-6 shadow-lg">
+          <h2 className="mb-5 text-xl font-semibold text-yellow-400">
+            Star Characteristics
+          </h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Stat
+              label="Density"
+              value={horizonsData?.density}
+            />
+            <Stat
+              label="Temperature"
+              value={horizonsData?.temperature}
+            />
+            <Stat
+              label="Luminosity"
+              value={horizonsData?.luminosity}
+            />
+            <Stat
+              label="Photospheric Depth"
+              value={horizonsData?.photosphericDepth}
+            />
+            <Stat
+              label="Chromospheric Depth"
+              value={horizonsData?.chromosphericDepth}
+            />
+            <Stat
+              label="Solar Constant"
+              value={horizonsData?.solarConstant}
+            />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

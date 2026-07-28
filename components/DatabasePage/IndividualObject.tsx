@@ -18,11 +18,6 @@ type IndividualObjectProps = {
   fromQuery: string;
 };
 
-const stellarObjectCategory: Record<string, string> = {
-  horizons: "Horizon Major Body",
-  exoplanet: "Exoplanet",
-};
-
 export default function IndividualObject({ objectID, exoplanetName, location, fromQuery }: IndividualObjectProps) {
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
@@ -70,14 +65,10 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
     return null;
   }
 
-  const objectName = exoplanetName.replaceAll('%20', ' ');
   return (
     <div className="flex flex-col items-center min-h-screen bg-nebulaBG">
       <BackButton destination={`/database?query=${fromQuery}`} />
       <StarWeaveTitle size={5} />
-      <p className="general-text text-[1.5vw]">{objectName}</p>
-      <p className="general-text text-[1vw]">{stellarObjectCategory[location]}</p>
-      <p className="general-text text-[1vw]"> {objectID} </p>
 
       <HorizonPlanetObjectPage location={location} horizonsData={horizonsData}/>
       <HorizonStarObjectPage location={location} horizonsData={horizonsData}/>

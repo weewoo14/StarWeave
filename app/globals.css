@@ -6,6 +6,9 @@
   --color-nebulaBG: #26215c;
   --color-nebulaAccent: #3c3489;
   --color-nebulaHighlight: #1d9e75;
+
+  --color-nebulaObjectCardBG: #0F172ACC;
+  --color-nebulaObjectCardAccent: #475569;
 }
 
 .general-text {

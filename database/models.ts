@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const searchDataSchema = new Schema({
   id: {type: String, unique: true},
@@ -6,5 +6,5 @@ const searchDataSchema = new Schema({
   location: {type: String, required: true},
 })
 
-const SEARCHDATA = model("SearchData", searchDataSchema, "SearchData");
+const SEARCHDATA = models.SEARCHDATA || model("SearchData", searchDataSchema, "SearchData");
 export default SEARCHDATA;
