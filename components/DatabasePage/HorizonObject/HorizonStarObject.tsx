@@ -16,6 +16,8 @@ export default function HorizonStarObjectPage({location, horizonsData}: {locatio
     return null;
   }
 
+  const [value, exponent] = horizonsData?.mass?.split(" ") ?? [];
+
   return (
     <div
       className={`${
@@ -48,26 +50,32 @@ export default function HorizonStarObjectPage({location, horizonsData}: {locatio
             <Stat
               label="Name"
               value={horizonsData?.name}
+              unit=""
             />
             <Stat
               label="Mass"
-              value={horizonsData?.mass}
+              value={`${value} x 10^${exponent}`}
+              unit="KG"
             />
             <Stat
               label="Radius"
               value={horizonsData?.radius}
+              unit="KM"
             />
             <Stat
               label="Escape Velocity"
               value={horizonsData?.escapeVelocity}
+              unit="KM/S"
             />
             <Stat
               label="Surface Gravity"
               value={horizonsData?.surfaceGravity}
+              unit="M/S^2"
             />
             <Stat
               label="Rotation Period"
               value={horizonsData?.rotationPeriod}
+              unit=""
             />
           </div>
         </section>
@@ -82,26 +90,32 @@ export default function HorizonStarObjectPage({location, horizonsData}: {locatio
             <Stat
               label="Density"
               value={horizonsData?.density}
+              unit="GM/CM^3"
             />
             <Stat
               label="Temperature"
               value={horizonsData?.temperature}
+              unit="K"
             />
             <Stat
               label="Luminosity"
-              value={horizonsData?.luminosity}
+              value={`${horizonsData?.luminosity} x 10^24`}
+              unit="J/s"
             />
             <Stat
               label="Photospheric Depth"
               value={horizonsData?.photosphericDepth}
+              unit="KM"
             />
             <Stat
               label="Chromospheric Depth"
               value={horizonsData?.chromosphericDepth}
+              unit="KM"
             />
             <Stat
-              label="Solar Constant"
+              label="Solar Constant (1 AU)"
               value={horizonsData?.solarConstant}
+              unit="W/m^2"
             />
           </div>
         </section>

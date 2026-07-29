@@ -57,22 +57,27 @@ export default function ExoplanetObjectPage({location, exoplanetData}: {location
               <Stat
                 label="Radius"
                 value={exoplanetData?.planetRadius}
+                unit="Earths"
               />
               <Stat
                 label="Mass"
                 value={exoplanetData?.planetMass}
+                unit="Earths"
               />
               <Stat
                 label="Density"
                 value={exoplanetData?.planetDensity}
+                unit="g/cm^3"
               />
               <Stat
                 label="Temperature"
                 value={exoplanetData?.planetTemperature}
+                unit="K"
               />
               <Stat
                 label="Stellar Flux"
                 value={exoplanetData?.planetStellarFlux}
+                unit=""
               />
             </div>
           </section>
@@ -90,14 +95,17 @@ export default function ExoplanetObjectPage({location, exoplanetData}: {location
               <Stat
                 label="Orbital Distance"
                 value={exoplanetData?.planetOrbitalDistance}
+                unit="AU"
               />
               <Stat
                 label="Orbital Period"
                 value={exoplanetData?.planetOrbitalPeriod}
+                unit="DAYS"
               />
               <Stat
                 label="Eccentricity"
                 value={exoplanetData?.planetOrbitalEccentricity}
+                unit=""
               />
             </div>
           </section>
@@ -112,26 +120,32 @@ export default function ExoplanetObjectPage({location, exoplanetData}: {location
               <Stat
                 label="Name"
                 value={exoplanetData?.starName}
+                unit=""
               />
               <Stat
                 label="Classification"
                 value={exoplanetData?.starClassification}
+                unit=""
               />
               <Stat
                 label="Temperature"
                 value={exoplanetData?.starTemperature}
+                unit="K"
               />
               <Stat
                 label="Radius"
                 value={exoplanetData?.starRadius}
+                unit="Suns"
               />
               <Stat
                 label="Luminosity"
                 value={exoplanetData?.starLuminosity}
+                unit="Suns"
               />
               <Stat
                 label="Age"
                 value={exoplanetData?.starAge}
+                unit=""
               />
             </div>
           </section>

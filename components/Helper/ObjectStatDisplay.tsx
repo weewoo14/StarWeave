@@ -1,4 +1,4 @@
-export default function Stat({label, value} : {label: string, value: string | number | undefined | null}){
+export default function Stat({label, value, unit} : {label: string, value: string | number | undefined | null, unit: string}){
   return (
     <div className="rounded-xl border border-nebulaObjectCardAccent bg-[#2D2868] p-4">
       <p className="text-sm uppercase tracking-wide text-slate-400">
@@ -6,7 +6,7 @@ export default function Stat({label, value} : {label: string, value: string | nu
       </p>
 
       <p className="mt-1 text-lg font-semibold">
-        {value ?? "Unknown"}
+        {value ?? "Unknown"} {unit}
       </p>
     </div>
   );

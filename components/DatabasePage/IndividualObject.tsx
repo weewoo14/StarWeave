@@ -13,17 +13,21 @@ import HorizonStarObjectPage from "./HorizonObject/HorizonStarObject";
 
 type IndividualObjectProps = {
   objectID: string;
-  exoplanetName: string;
+  objectName: string;
   location: string;
   fromQuery: string;
 };
 
-export default function IndividualObject({ objectID, exoplanetName, location, fromQuery }: IndividualObjectProps) {
+export default function IndividualObject({ objectID, objectName, location, fromQuery }: IndividualObjectProps) {
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
 
   useEffect(() => {
+    async function getLink() {
+      const link = `https://wikipedia.org/wiki/${objectName}`;
+      
+    }
     async function getStellarData() {
       const searchParams = new URLSearchParams({
         objectID: objectID,
@@ -45,7 +49,8 @@ export default function IndividualObject({ objectID, exoplanetName, location, fr
           response = await fetch(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
           if (response && response.ok) {
             const exoplanetResponseData = await response.json();
-            setExoplanetData(exoplanetResponseData)
+            setExoplanetData(exoplanetResponseData);
+            console.log(exoplanetResponseData);
             setObjectDataLoaded(true);
           }
           break;

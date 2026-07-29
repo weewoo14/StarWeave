@@ -7,6 +7,7 @@ const stellarObjectCategory: Record<string, string> = {
 };
 
 export default function HorizonSatellitetObjectPage({location, horizonsData}: {location: string, horizonsData: HorizonsDataType | null}) {
+  
   if (location !== "horizons") {
     return null;
   }
@@ -14,6 +15,8 @@ export default function HorizonSatellitetObjectPage({location, horizonsData}: {l
   if (!horizonsData || horizonsData.type !== "satellite") {
     return null;
   }
+
+  const [value, exponent] = horizonsData?.mass?.split(" ") ?? [];
 
   return (
     <div
@@ -47,18 +50,22 @@ export default function HorizonSatellitetObjectPage({location, horizonsData}: {l
             <Stat
               label="Name"
               value={horizonsData?.name}
+              unit=""
             />
             <Stat
               label="Mass"
-              value={horizonsData?.mass}
+              value={`${value} x 10^${exponent}`}
+              unit="KG"
             />
             <Stat
               label="Radius"
               value={horizonsData?.radius}
+              unit="KM"
             />
             <Stat
               label="Density"
               value={horizonsData?.density}
+              unit="GM/CM^3"
             />
 
           </div>
@@ -74,14 +81,17 @@ export default function HorizonSatellitetObjectPage({location, horizonsData}: {l
             <Stat
               label="Semi-Major Axis"
               value={horizonsData?.semiMajorAxis}
+              unit="AU"
             />
             <Stat
               label="Orbital Period"
               value={horizonsData?.orbitalPeriod}
+              unit="YRS"
             />
             <Stat
               label="Eccentricity"
               value={horizonsData?.eccentricity}
+              unit=""
             />
           </div>
         </section>

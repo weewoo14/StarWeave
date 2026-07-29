@@ -46,7 +46,7 @@ function getHorizonsPlanetData(horizonsData: string) {
 
 /* Star Regular Expression Formulas */
 const starNameRegex = /Revised:\s+.*?\s{2,}(.+?)\s+\d+\s*$/m;
-const starMassRegex = /Mass(?:\s*x)?\s*10\^(\d+).*?=\s*~?([+-]?\d+(?:\.\d+)?)/;
+const starMassRegex = /Mass(?:\s*x|,)?\s*10\^(\d+)\s*(?:\(kg\)|kg).*?=\s*~?([+-]?\d+(?:\.\d+)?)/i;
 const starRadiusRegex = /Vol\.\s*mean\s*radius.*?=\s*([+-]?\d+(?:\.\d+)?)/i;
 const starDensityRegex = /Mean density.*?=\s*([+-]?\d+(?:\.\d+)?)/;
 const starGravityRegex = /Surface gravity.*?=\s*([+-]?\d+(?:\.\d+)?)/;

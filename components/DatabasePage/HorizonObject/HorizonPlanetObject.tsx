@@ -7,6 +7,7 @@ const stellarObjectCategory: Record<string, string> = {
 };
 
 export default function HorizonPlanetObjectPage({location, horizonsData}: {location: string, horizonsData: HorizonsDataType | null}) {
+
   if (location !== "horizons") {
     return null;
   }
@@ -14,6 +15,8 @@ export default function HorizonPlanetObjectPage({location, horizonsData}: {locat
   if (!horizonsData || horizonsData.type !== "planet") {
     return null;
   }
+
+  const [value, exponent] = horizonsData?.mass?.split(" ") ?? [];
 
   return (
     <div
@@ -47,26 +50,32 @@ export default function HorizonPlanetObjectPage({location, horizonsData}: {locat
             <Stat
               label="Name"
               value={horizonsData?.name}
+              unit=""
             />
             <Stat
               label="Mass"
-              value={horizonsData?.mass}
+              value={`${value} x 10^${exponent}`}
+              unit="KG"
             />
             <Stat
               label="Radius"
               value={horizonsData?.radius}
+              unit="KM"
             />
             <Stat
               label="Density"
               value={horizonsData?.density}
+              unit="GM/CM^3"
             />
             <Stat
               label="Surface Gravity"
               value={horizonsData?.surfaceGravity}
+              unit="M/S^2"
             />
             <Stat
               label="Temperature"
               value={horizonsData?.temperature}
+              unit="K"
             />
           </div>
         </section>
@@ -81,18 +90,22 @@ export default function HorizonPlanetObjectPage({location, horizonsData}: {locat
             <Stat
               label="Orbital Period"
               value={horizonsData?.orbitalPeriod}
+              unit="YRS"
             />
             <Stat
               label="Orbital Speed"
               value={horizonsData?.orbitalSpeed}
+              unit="KM/S"
             />
             <Stat
               label="Escape Velocity"
               value={horizonsData?.escapeVelocity}
+              unit="KM/S"
             />
             <Stat
               label="Rotation Period"
               value={horizonsData?.rotationPeriod}
+              unit=""
             />
           </div>
         </section>
