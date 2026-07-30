@@ -24,11 +24,29 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
 
   useEffect(() => {
-    async function getLink() {
-      const link = `https://wikipedia.org/wiki/${objectName}`;
-      
-    }
     async function getStellarData() {
+
+      // Redis Check
+      const getRedisResponse = await fetch(`/api/redis/GET?objectID=${objectID}`);
+      if (getRedisResponse.ok) {
+        const getRedisData = await getRedisResponse.json();
+        switch (location) {
+          case "horizons":
+            setHorizonsData(getRedisData);
+            setObjectDataLoaded(true);
+            return;
+          
+          case "exoplanet":
+            setExoplanetData(getRedisData);
+            setObjectDataLoaded(true);
+            return;
+
+          default:
+            break;
+        }
+      }
+
+      // If Redis and MongoDB does not have the data for quick querying
       const searchParams = new URLSearchParams({
         objectID: objectID,
         location: location,
@@ -40,8 +58,19 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
           response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
           if (response && response.ok) {
             const horizonsResponseData = await response.json();
-            console.log(horizonsResponseData.result);
             setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
+
+            await fetch("/api/redis/POST", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                objectID: objectID,
+                stellarObject: getHorizonsData(objectID, horizonsResponseData.result),
+              }),
+            })
+
             setObjectDataLoaded(true);
           }
           break;
@@ -50,7 +79,18 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
           if (response && response.ok) {
             const exoplanetResponseData = await response.json();
             setExoplanetData(exoplanetResponseData);
-            console.log(exoplanetResponseData);
+
+            await fetch("/api/redis/POST", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                objectID: objectID,
+                stellarObject: exoplanetResponseData,
+              }),
+            })
+
             setObjectDataLoaded(true);
           }
           break;
