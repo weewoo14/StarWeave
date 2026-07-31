@@ -1,8 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 import { ExoplanetDataType } from "@/types/StellarDataAPI";
 
+const upstashRedis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+})
+
+const rateLimit = new Ratelimit({
+  redis: upstashRedis,
+  limiter: Ratelimit.fixedWindow(100, "60 s"),
+})
+
 export async function GET(request: NextRequest) {
+  const identifer = "getExoplanetStellarData";
+  const rateLimitResult = await rateLimit.limit(identifer);
+
+  if (!rateLimitResult.success) {
+    return Response.json({
+      message: "The API that calls the Exoplanet Data Archive has received too many requests.",
+    }, {
+      status: 429,
+    })
+  }
+
   const searchParams = request.nextUrl.searchParams;
   const exoplanetID = searchParams.get("objectID");
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import BackButton from "@/components/Helper/BackButton";
 import StarWeaveTitle from "@/components/Helper/Title";
+
 import { ExoplanetDataType, HorizonsDataType } from "@/types/StellarDataAPI";
 import { getHorizonsData } from "@/utils/StellarDataAPI";
 
@@ -20,6 +21,7 @@ type IndividualObjectProps = {
 
 export default function IndividualObject({ objectID, objectName, location, fromQuery }: IndividualObjectProps) {
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
+  const [showErrorScreen, setShowErrorScreen] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
 
@@ -42,7 +44,8 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
             return;
 
           default:
-            break;
+            setShowErrorScreen(true);
+            return;
         }
       }
 
@@ -53,50 +56,42 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
       })
 
       let response;
+      let stellarObject;
       switch (location) {
         case "horizons":
           response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
-          if (response && response.ok) {
+          if (response.ok) {
             const horizonsResponseData = await response.json();
+            stellarObject = getHorizonsData(objectID, horizonsResponseData.result);
             setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
 
-            await fetch("/api/redis/POST", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                objectID: objectID,
-                stellarObject: getHorizonsData(objectID, horizonsResponseData.result),
-              }),
-            })
-
-            setObjectDataLoaded(true);
           }
           break;
         case "exoplanet":
           response = await fetch(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
-          if (response && response.ok) {
+          if (response.ok) {
             const exoplanetResponseData = await response.json();
+            stellarObject = exoplanetResponseData;
             setExoplanetData(exoplanetResponseData);
-
-            await fetch("/api/redis/POST", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                objectID: objectID,
-                stellarObject: exoplanetResponseData,
-              }),
-            })
-
-            setObjectDataLoaded(true);
           }
           break;
         default:
           break;
       }
+
+      await fetch("/api/redis/POST", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          objectID: objectID,
+          stellarObject: stellarObject,
+        }),
+      });
+
+      setObjectDataLoaded(true);
+
     }
 
     getStellarData();

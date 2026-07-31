@@ -1,9 +1,32 @@
-import mongoConnect from "@/database/mongodb";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 import { parseHorizonsData } from "@/utils/SearchDataAPI";
 
+const upstashRedis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+const rateLimit = new Ratelimit({
+  redis: upstashRedis,
+  limiter: Ratelimit.fixedWindow(25, "60 s"),
+})
+
 export async function GET() {
-  await mongoConnect();
+  const identifer = "customSearchDataAPI";
+  const rateLimitResult = await rateLimit.limit(identifer);
+  
+  if (!rateLimitResult.success) {
+    return Response.json({
+      message: "Custom Search Data API has received too many requests",
+    }, {
+      status: 429
+    })
+  }
+
+
   const stellarObjectResults: stellarObjectResultType[] = [];
 
   // NASA Horizons Major Body

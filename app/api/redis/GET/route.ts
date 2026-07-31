@@ -1,8 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 import { getRedisClient } from "@/database/redis";
 
+const upstashRedis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL as string,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+})
+
+const rateLimit = new Ratelimit({
+  redis: upstashRedis,
+  limiter: Ratelimit.fixedWindow(100, "60 s"),
+})
+
 export async function GET(request: NextRequest) {
+  const identifier = "getRedisCacheAPI";
+  const rateLimitResult = await rateLimit.limit(identifier);
+  
+  if (!rateLimitResult.success) {
+    return NextResponse.json({
+      message: "GET Redis Cache API has been rate limited.",
+      rateLimitState: rateLimitResult,
+    },
+    {
+      status: 429
+    })
+  }
+
+
   const searchParams = request.nextUrl.searchParams;
   const objectID = searchParams.get("objectID");
 
@@ -28,7 +54,7 @@ export async function GET(request: NextRequest) {
     },
   )
   }
-  const getCachedResponse = await redis.get(objectID);
+  const getCachedResponse = await redis.get(`stellarObjectCache:${objectID}`);
   if (!getCachedResponse) {
     return NextResponse.json({
       success: false,
