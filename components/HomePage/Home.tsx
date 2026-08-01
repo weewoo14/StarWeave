@@ -3,12 +3,15 @@ import SearchBar from "@/components/Helper/SearchBar";
 import StarWeaveTitle from "@/components/Helper/Title";
 
 import { useStarWeaveState } from "../StarWeaveContext";
+import LoadingScreen from "../Helper/LoadingScreen";
 
 export default function HomePage() {
   const { dataLoaded } = useStarWeaveState();
 
   if (!dataLoaded) {
-    return null;
+    return (
+      <LoadingScreen/>
+    );
   }
 
   return (

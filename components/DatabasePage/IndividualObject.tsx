@@ -11,6 +11,8 @@ import HorizonMiscellaneousObjectPage from "./HorizonObject/HorizonMiscellaneous
 import HorizonPlanetObjectPage from "./HorizonObject/HorizonPlanetObject";
 import HorizonSatellitetObjectPage from "./HorizonObject/HorizonSatelliteObject";
 import HorizonStarObjectPage from "./HorizonObject/HorizonStarObject";
+import { useStarWeaveState } from "../StarWeaveContext";
+import LoadingScreen from "../Helper/LoadingScreen";
 
 type IndividualObjectProps = {
   objectID: string;
@@ -24,12 +26,20 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
   const [showErrorScreen, setShowErrorScreen] = useState<boolean>(false);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
+  const {dataLoaded} = useStarWeaveState();
 
   useEffect(() => {
     async function getStellarData() {
 
       // Redis Check
-      const getRedisResponse = await fetch(`/api/redis/GET?objectID=${objectID}`);
+      /*
+      ToDO: Maybe find some way to skip/continue if the response is ok and then check if 
+      */
+      let getRedisResponse = await fetch(`/api/redis/GET?objectID=${objectID}`);
+      if (getRedisResponse.status === 429) {
+        getRedisResponse = await retryCall(`/api/redis/GET?objectID=${objectID}`);
+      }
+
       if (getRedisResponse.ok) {
         const getRedisData = await getRedisResponse.json();
         switch (location) {
@@ -76,7 +86,8 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
           }
           break;
         default:
-          break;
+          setShowErrorScreen(true);
+          return;
       }
 
       await fetch("/api/redis/POST", {
@@ -101,8 +112,10 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
     }
   }, [location, objectID])
 
-  if (!objectDataLoaded) {
-    return null;
+  if (!dataLoaded || !objectDataLoaded) {
+    return (
+      <LoadingScreen/>
+    );
   }
 
   return (

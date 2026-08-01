@@ -27,7 +27,7 @@ export default function DatabaseObjectCard({
   return (
     <button
       className="flex flex-col w-[20vw] h-[20vw] aspect-square m-4 border-2 border-nebulaAccent
-                    rounded-md cursor-pointer hover:scale-105 hover:bg-nebulaAccent"
+                    rounded-md cursor-pointer hover:scale-105 hover:bg-nebulaAccent hover:border-white"
       onClick={() => {
         goToObject(objectID, name, location, searchQuery);
       }}

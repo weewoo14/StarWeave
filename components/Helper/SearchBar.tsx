@@ -64,6 +64,7 @@ export default function SearchBar({ searchDefaultValue = "", searchAmount }: Sea
 
   const searchInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      setIsSearchOpen(false);
       router.push(`/database?query=${objectSearchResult}`);
     }
   };
@@ -87,7 +88,7 @@ export default function SearchBar({ searchDefaultValue = "", searchAmount }: Sea
           return (
             <button
               key={idx}
-              className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG w-full font-syne p-2 border-1 border-white cursor-pointer"
+              className="flex flex-row justify-between bg-nebulaAccent hover:bg-nebulaBG hover:border-white w-full font-syne p-2 border-1 border-white cursor-pointer"
               onClick={() => {
                 goToObject(stellarObject.id, stellarObject.name, stellarObject.location, objectSearchResult);
               }}

@@ -6,14 +6,21 @@ import { filterSearchResult } from "@/utils/SearchResultFilter";
 import { useStarWeaveState } from "../StarWeaveContext";
 
 import DatabaseObjectCard from "./DatabaseObjectCard";
+import LoadingScreen from "../Helper/LoadingScreen";
 
 type DatabaseHomePageProps = {
   searchQuery: string;
 };
 
 export default function DatabaseHomePage({ searchQuery }: DatabaseHomePageProps) {
-  const { searchData } = useStarWeaveState();
-  const databaseSearchResults = filterSearchResult(searchData, searchQuery, 100);
+  const { searchData, dataLoaded } = useStarWeaveState();
+  const databaseSearchResults = filterSearchResult(searchData, searchQuery, 10);
+
+  if (!dataLoaded) {
+    return (
+      <LoadingScreen/>
+    );
+  }
 
   return (
     <div className="bg-nebulaBG w-full min-h-screen h-auto">

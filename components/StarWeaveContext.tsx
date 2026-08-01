@@ -10,7 +10,7 @@ const AppStateContext = createContext<searchDataContextType>({
 
 export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
   const [searchData, setSearchData] = useState<stellarObjectResultType[]>([]);
-  const dataLoaded = searchData.length > 0 ? true : false;
+  const dataLoaded = false;
 
   useEffect(() => {
     
