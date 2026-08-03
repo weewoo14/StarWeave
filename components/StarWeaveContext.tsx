@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 import { searchDataContextType, stellarObjectResultType } from "@/types/SearchDataAPI";
+import { retryCall } from "@/utils/retryExponentialBackoff";
 
 const AppStateContext = createContext<searchDataContextType>({
   searchData: [],
@@ -10,15 +11,17 @@ const AppStateContext = createContext<searchDataContextType>({
 
 export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
   const [searchData, setSearchData] = useState<stellarObjectResultType[]>([]);
-  const dataLoaded = false;
+  const [showErrorScreen, setShowErrorScreen] = useState<number>(-1);
+  const dataLoaded = searchData.length > 0 ? true : false;
 
   useEffect(() => {
     
     // Getting the Search Data
     async function getSearchData() {
-      const getSearchDataResponse = await fetch("/api/mongodb/GET");
+      const getSearchDataResponse = await retryCall("/api/mongodb/GET");
       if (!getSearchDataResponse.ok) {
-        throw new Error("Issue with GEET Search Data API");
+        setShowErrorScreen(getSearchDataResponse.status);
+        return;
       }
 
       const getSearchDataArray = await getSearchDataResponse.json();
@@ -28,9 +31,10 @@ export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
 
     // Updating the Search Data
     async function updateSearchData() {
-      const updateSearchDataResponse = await fetch("/api/searchdata");
+      const updateSearchDataResponse = await retryCall("/api/searchdata");
       if (!updateSearchDataResponse.ok) {
-        throw new Error("Issue with Update Search Data API");
+        console.log(updateSearchDataResponse.status);
+        return;
       }
       const updateSearchDataArray = await updateSearchDataResponse.json();
 

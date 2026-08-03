@@ -3,6 +3,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 import { ExoplanetDataType } from "@/types/StellarDataAPI";
+import { retryCall } from "@/utils/retryExponentialBackoff";
 
 const upstashRedis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -30,10 +31,14 @@ export async function GET(request: NextRequest) {
   const exoplanetID = searchParams.get("objectID");
 
   if (!exoplanetID) {
-    return NextResponse.json({
-      error: 502,
-      status: "Exoplanet ID does not exist."
-    })
+    return NextResponse.json(
+      {
+        error: `Exoplanet ID does not exist.`,
+      },
+      {
+        status: 404,
+      }
+    );
   }
 
   const queryParams = `
@@ -42,12 +47,16 @@ export async function GET(request: NextRequest) {
     where pl_name = '${exoplanetID}'
   `
 
-  const objectResponse = await fetch(`https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=${encodeURIComponent(queryParams)}&format=json`);
+  const objectResponse = await retryCall(`https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=${encodeURIComponent(queryParams)}&format=json`);
   if (!objectResponse.ok) {
-    return NextResponse.json({
-      error: 502,
-      status: `Exoplanet Archive Database returned ${objectResponse.status}`
-    })
+    return NextResponse.json(
+      {
+        error: `Exoplanet Archive returned ${objectResponse.status}`,
+      },
+      {
+        status: objectResponse.status,
+      }
+    );
   }
 
   const [objectData] = await objectResponse.json();

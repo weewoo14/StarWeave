@@ -1,4 +1,4 @@
-async function retryCall(url: string) {
+export async function retryCall(url: string) {
   const retries = 2;
   let delay: number = 1000;
   for (let retryAttempt: number = 1; retryAttempt <= retries; retryAttempt++) {
@@ -14,7 +14,7 @@ async function retryCall(url: string) {
         message: `The API at endpoint ${url} ran into a new error.`
       },
       {
-        status: 500,
+        status: response.status,
       });
     }
 

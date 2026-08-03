@@ -28,10 +28,14 @@ export async function GET(request: NextRequest) {
   const horizonsID = searchParams.get("objectID");
 
   if (!horizonsID) {
-    return NextResponse.json({
-      error: 501,
-      status: "Horizons ID does not exist"
-    })
+    return NextResponse.json(
+      {
+        error: `Horizons ID does not exist.`,
+      },
+      {
+        status: 404,
+      }
+    );
   }
 
   const queryParams = new URLSearchParams({
@@ -42,10 +46,14 @@ export async function GET(request: NextRequest) {
 
   const objectResponse = await fetch(`https://ssd.jpl.nasa.gov/api/horizons.api?${queryParams.toString()}`);
   if (!objectResponse.ok) {
-    return NextResponse.json({
-      error: 502,
-      status: `Horizons returned ${objectResponse.status}`
-    })
+    return NextResponse.json(
+      {
+        error: `Exoplanet Archive returned ${objectResponse.status}`,
+      },
+      {
+        status: objectResponse.status,
+      }
+    );
   }
 
   const objectData = await objectResponse.json();

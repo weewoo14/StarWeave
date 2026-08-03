@@ -5,6 +5,7 @@ import StarWeaveTitle from "@/components/Helper/Title";
 
 import { ExoplanetDataType, HorizonsDataType } from "@/types/StellarDataAPI";
 import { getHorizonsData } from "@/utils/StellarDataAPI";
+import { retryCall }  from "@/utils/retryExponentialBackoff";
 
 import ExoplanetObjectPage from "./ExoplanetObject";
 import HorizonMiscellaneousObjectPage from "./HorizonObject/HorizonMiscellaneousObject";
@@ -23,7 +24,7 @@ type IndividualObjectProps = {
 
 export default function IndividualObject({ objectID, objectName, location, fromQuery }: IndividualObjectProps) {
   const [objectDataLoaded, setObjectDataLoaded] = useState<boolean>(false);
-  const [showErrorScreen, setShowErrorScreen] = useState<boolean>(false);
+  const [showErrorScreen, setShowErrorScreen] = useState<number>(-1);
   const [horizonsData, setHorizonsData] = useState<HorizonsDataType | null>(null)
   const [exoplanetData, setExoplanetData] = useState<ExoplanetDataType | null>(null);
   const {dataLoaded} = useStarWeaveState();
@@ -35,10 +36,8 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
       /*
       ToDO: Maybe find some way to skip/continue if the response is ok and then check if 
       */
-      let getRedisResponse = await fetch(`/api/redis/GET?objectID=${objectID}`);
-      if (getRedisResponse.status === 429) {
-        getRedisResponse = await retryCall(`/api/redis/GET?objectID=${objectID}`);
-      }
+
+      const getRedisResponse = await retryCall(`/api/redis/GET?objectID=${objectID}`);
 
       if (getRedisResponse.ok) {
         const getRedisData = await getRedisResponse.json();
@@ -54,54 +53,63 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
             return;
 
           default:
-            setShowErrorScreen(true);
+            setShowErrorScreen(500);
             return;
         }
       }
 
-      // If Redis and MongoDB does not have the data for quick querying
-      const searchParams = new URLSearchParams({
-        objectID: objectID,
-        location: location,
-      })
-
-      let response;
-      let stellarObject;
-      switch (location) {
-        case "horizons":
-          response = await fetch(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
-          if (response.ok) {
-            const horizonsResponseData = await response.json();
-            stellarObject = getHorizonsData(objectID, horizonsResponseData.result);
-            setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
-
-          }
-          break;
-        case "exoplanet":
-          response = await fetch(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
-          if (response.ok) {
-            const exoplanetResponseData = await response.json();
-            stellarObject = exoplanetResponseData;
-            setExoplanetData(exoplanetResponseData);
-          }
-          break;
-        default:
-          setShowErrorScreen(true);
-          return;
-      }
-
-      await fetch("/api/redis/POST", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      console.log(getRedisResponse);
+      if (getRedisResponse.status === 404) {
+        console.log("HERE");
+        // If Redis and MongoDB does not have the data for quick querying
+        const searchParams = new URLSearchParams({
           objectID: objectID,
-          stellarObject: stellarObject,
-        }),
-      });
+          location: location,
+        })
 
-      setObjectDataLoaded(true);
+        let response;
+        let stellarObject;
+        switch (location) {
+          case "horizons":
+            response = await retryCall(`/api/stellardata/horizonsdata?${searchParams.toString()}`);
+            if (response.ok) {
+              const horizonsResponseData = await response.json();
+              stellarObject = getHorizonsData(objectID, horizonsResponseData.result);
+              setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
+            } else {
+              setShowErrorScreen(response.status);
+            }
+            break;
+          case "exoplanet":
+            response = await retryCall(`/api/stellardata/exoplanetdata?${searchParams.toString()}`);
+            if (response.ok) {
+              const exoplanetResponseData = await response.json();
+              stellarObject = exoplanetResponseData;
+              setExoplanetData(exoplanetResponseData);
+            } else {
+              setShowErrorScreen(response.status);
+            }
+            break;
+          default:
+            setShowErrorScreen(500);
+            return;
+        }
+
+        await fetch("/api/redis/POST", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            objectID: objectID,
+            stellarObject: stellarObject,
+          }),
+        });
+
+        setObjectDataLoaded(true);
+      } else {
+        setShowErrorScreen(getRedisResponse.status);
+      }
 
     }
 

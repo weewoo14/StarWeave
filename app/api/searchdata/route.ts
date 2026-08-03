@@ -3,6 +3,7 @@ import { Redis } from "@upstash/redis";
 
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 import { parseHorizonsData } from "@/utils/SearchDataAPI";
+import { retryCall } from "@/utils/retryExponentialBackoff";
 
 const upstashRedis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -30,14 +31,14 @@ export async function GET() {
   const stellarObjectResults: stellarObjectResultType[] = [];
 
   // NASA Horizons Major Body
-  const horizonsMBResponse = await fetch(
+  const horizonsMBResponse = await retryCall(
     "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND='MB'"
   );
 
   if (!horizonsMBResponse.ok) {
     return Response.json(
       { error: `Horizons Data returned ${horizonsMBResponse.status}` },
-      { status: 502 }
+      { status: horizonsMBResponse.status }
     );
   }
 
@@ -57,14 +58,14 @@ export async function GET() {
   }
 
   // NASA Exoplanet Archive
-  const exoplanetResponse = await fetch(
+  const exoplanetResponse = await retryCall(
     "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name+from+pscomppars&format=json"
   );
 
   if (!exoplanetResponse.ok) {
     return Response.json(
       { error: `Exoplanet Archive data returned ${exoplanetResponse.status}` },
-      { status: 502 }
+      { status: exoplanetResponse.status }
     );
   }
 
