@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-import SEARCHDATA from "@/database/models";
+import Models from "@/database/models";
 import mongoConnect from "@/database/mongodb";
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
   await mongoConnect();
   const stellarObjectResults: stellarObjectResultType[] = [];
-  const allSearchDataQuery = await SEARCHDATA.find({});
+  const allSearchDataQuery = await Models.SEARCHDATA.find({});
 
   for (const stellarObject of allSearchDataQuery) {
     stellarObjectResults.push({

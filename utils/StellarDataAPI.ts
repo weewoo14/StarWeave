@@ -11,16 +11,16 @@ function getMass(text: string, regexFormula: RegExp) {
 }
 
 /* Planet Regular Expression Formulas */
-const planetNameRegex = /Revised:\s+.*?\s{2,}(.+?)\s+\d+\s*$/m;
-const planetMassRegex = /Mass(?:\s*x)?\s*10\^(\d+).*?=\s*~?([+-]?\d+(?:\.\d+)?)/;
-const planetRadiusRegex = /Vol\.\s*Mean\s*Radius.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetDensityRegex = /Density.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetGravityRegex = /(?:Equ\.\s*grav.*?|g_o,\s*m\/s\^2)\s*=+\s*([+-]?\d+(?:\.\d+)?)/;
-const planetEscapeVelocityRegex = /Escape speed.*?=\s*([+-]?\d+(?:\.\d+)?)/;
-const planetRotationPeriodRegex = /(?:Sid\.\s*rot\.\s*period.*?|Mean sidereal day,\s*hr)\s*=+\s*([^\n]+)/;
-const planetTemperatureRegex = /(?:Atmos\.\s*temp.*?|Mean surface temp.*?K)\s*=+\s*([+-]?\d+(?:\.\d+)?)/;
-const planetOrbitalPeriodRegex = /Sidereal\s*orb(?:it)?\s*period\s*=+\s*([+-]?\d+(?:\.\d+)?)\s*y/i;
-const planetOrbitalSpeedRegex = /(?:Mean\s+orbit\s+(?:speed|velocity)|Orbital\s+speed).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetNameRegex = /^\s*(?:Revised:\s+[A-Za-z]+\s+\d{1,2},\s+\d{4}\s+)?([A-Za-z0-9\s\-]+?)\s+\d+(?:\s*\/\s*\d+)?\s*$/m;
+const planetMassRegex = /Mass\s*x?10\^?(\d+).*?=\s*~?([+-]?\d+(?:\.\d+)?)/i;
+const planetRadiusRegex = /Vol\.\s*Mean\s*Radius.*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetDensityRegex = /Density\s*\(.*?\).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetGravityRegex = /(?:Equ\.\s*gravity|g_o,?\s*m\/s\^2).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetEscapeVelocityRegex = /Escape\s*speed.*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetRotationPeriodRegex = /(?:Sidereal\s+rot\.\s+period|Mean\s+sidereal\s+day).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetTemperatureRegex = /(?:Mean\s+Temperature|Mean\s+surface\s+temp|Atmos\.\s*temp).*?=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetOrbitalPeriodRegex = /Sidereal\s+orb\.\s*per\.,\s*y\s*=\s*([+-]?\d+(?:\.\d+)?)/i;
+const planetOrbitalSpeedRegex = /Orbit\s+(?:speed|velocity),?\s*(?:km\/s)?\s*=\s*([+-]?\d+(?:\.\d+)?)/i;
 
 function getHorizonsPlanetData(horizonsData: string) {
 

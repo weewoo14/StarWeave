@@ -58,9 +58,37 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
         }
       }
 
-      console.log(getRedisResponse);
+      let getMongoDBResponse;
       if (getRedisResponse.status === 404) {
-        console.log("HERE");
+        const mongoDBSearchParams = new URLSearchParams({
+          objectName: decodeURIComponent(objectName),
+          objectLocation: location,
+        })
+        getMongoDBResponse = await fetch(`/api/mongodb/SpecificObject/GET?${mongoDBSearchParams.toString()}`);
+        if (getMongoDBResponse.ok) {
+          const getMongoDBData = await getMongoDBResponse.json();
+
+          switch (location) {
+          case "horizons":
+            setHorizonsData(getMongoDBData);
+            setObjectDataLoaded(true);
+            return;
+          
+          case "exoplanet":
+            setExoplanetData(getMongoDBData);
+            setObjectDataLoaded(true);
+            return;
+
+          default:
+            setShowErrorScreen(500);
+            return;
+          }
+        }
+      } else {
+        setShowErrorScreen(getRedisResponse.status);
+      }
+
+      if (getMongoDBResponse && getMongoDBResponse.status === 404) {
         // If Redis and MongoDB does not have the data for quick querying
         const searchParams = new URLSearchParams({
           objectID: objectID,
@@ -75,7 +103,9 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
             if (response.ok) {
               const horizonsResponseData = await response.json();
               stellarObject = getHorizonsData(objectID, horizonsResponseData.result);
-              setHorizonsData( getHorizonsData(objectID, horizonsResponseData.result) );
+              console.log(horizonsResponseData.result);
+              setHorizonsData( stellarObject );
+              setObjectDataLoaded(true);
             } else {
               setShowErrorScreen(response.status);
             }
@@ -86,6 +116,7 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
               const exoplanetResponseData = await response.json();
               stellarObject = exoplanetResponseData;
               setExoplanetData(exoplanetResponseData);
+              setObjectDataLoaded(true);
             } else {
               setShowErrorScreen(response.status);
             }
@@ -94,6 +125,24 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
             setShowErrorScreen(500);
             return;
         }
+
+        if (!stellarObject) {
+          setShowErrorScreen(404);
+          return;
+        }
+
+       const mdbresponse = await fetch("/api/mongodb/SpecificObject/POST", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            location: location,
+            stellarData: stellarObject,
+          })
+        })
+        const mdbresponsedata = await mdbresponse.json();
+        console.log(mdbresponsedata);
 
         await fetch("/api/redis/POST", {
           method: "POST",
@@ -105,10 +154,8 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
             stellarObject: stellarObject,
           }),
         });
-
-        setObjectDataLoaded(true);
       } else {
-        setShowErrorScreen(getRedisResponse.status);
+        setShowErrorScreen(500);
       }
 
     }

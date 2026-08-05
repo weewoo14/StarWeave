@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import SEARCHDATA from "@/database/models";
+import Models from "@/database/models";
 import mongoConnect from "@/database/mongodb";
 import { stellarObjectResultType } from "@/types/SearchDataAPI";
 
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
   }));
 
-  SEARCHDATA.bulkWrite(writeOperation);
+  Models.SEARCHDATA.bulkWrite(writeOperation);
 
   return NextResponse.json({success: true})
 }
