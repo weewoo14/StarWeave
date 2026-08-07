@@ -14,6 +14,7 @@ import HorizonSatellitetObjectPage from "./HorizonObject/HorizonSatelliteObject"
 import HorizonStarObjectPage from "./HorizonObject/HorizonStarObject";
 import { useStarWeaveState } from "../StarWeaveContext";
 import LoadingScreen from "../Helper/LoadingScreen";
+import ErrorScreen from "../Helper/ErrorScreen";
 
 type IndividualObjectProps = {
   objectID: string;
@@ -163,6 +164,7 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
     getStellarData();
 
     return () => {
+      setShowErrorScreen(-1);
       setObjectDataLoaded(false);
     }
   }, [location, objectID])
@@ -171,6 +173,12 @@ export default function IndividualObject({ objectID, objectName, location, fromQ
     return (
       <LoadingScreen/>
     );
+  }
+
+  if (showErrorScreen !== -1) {
+    return (
+      <ErrorScreen errorStatus={showErrorScreen}/>
+    )
   }
 
   return (

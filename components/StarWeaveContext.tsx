@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 import { searchDataContextType, stellarObjectResultType } from "@/types/SearchDataAPI";
 import { retryCall } from "@/utils/retryExponentialBackoff";
+import ErrorScreen from "./Helper/ErrorScreen";
 
 const AppStateContext = createContext<searchDataContextType>({
   searchData: [],
@@ -53,6 +54,12 @@ export function StarWeaveProvider({ children }: { children: React.ReactNode }) {
       clearInterval(updateSearchDataID);
     }
   }, []);
+
+  if (showErrorScreen !== -1) {
+    return (
+      <ErrorScreen errorStatus={showErrorScreen}/>
+    )
+  }
 
   return (
     <AppStateContext.Provider value={{ dataLoaded, searchData }}>

@@ -6,8 +6,8 @@ import { parseHorizonsData } from "@/utils/SearchDataAPI";
 import { retryCall } from "@/utils/retryExponentialBackoff";
 
 const upstashRedis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  url: process.env.UPSTASH_REDIS_REST_URL as string,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
 });
 
 const rateLimit = new Ratelimit({
