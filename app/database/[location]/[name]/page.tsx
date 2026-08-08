@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic"
 import { useParams, useSearchParams } from "next/navigation";
 
 import IndividualObject from "@/components/DatabasePage/IndividualObject";
