@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
   )
   }
 
-  await redis.set(`stellarObjectCache:${data.objectID}`, JSON.stringify(data.stellarObject));
+  await redis.set(`stellarObjectCache:${data.objectID}`, JSON.stringify(data.stellarObject), {
+    ex: 300
+  });
   return NextResponse.json({sucess: true});
 
 }

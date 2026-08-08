@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
   )
   }
 
-  return NextResponse.json( JSON.parse(getCachedResponse) );
+  return NextResponse.json( getCachedResponse );
 
 
 }
